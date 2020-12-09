@@ -1,0 +1,39 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dependent Dropdown in Django</title>
+    <link rel="stylesheet" media="screen" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div id="particles-js">
+
+        <center style="position: absolute; margin-top: 0px;">
+<h2>Car Form 2</h2>
+
+<form method="post" id="car_information_detailsForm" >
+    <!-- {% csrf_token %}
+    {{ form.as_p }} -->
+    <!-- <input name="id" value="{{car_information.id}}" /> --> 
+    {% csrf_token %}
+    <table>
+      {% for field in form %}
+          <tr>
+              <td>{{ field.label}}</td>
+              <td>{{ field }}</td>
+          </tr>
+      {% endfor %}
+  </table>
+    <input type="submit" value="Submit">
+</form>
+
+</center>
+</div>
+<script src="{% static 'js/particles.min.js' %}"></script>
+<script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>

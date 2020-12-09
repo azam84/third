@@ -1,0 +1,185 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dependent Dropdown in Django</title>
+    <link rel="stylesheet" media="screen" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div id="particles-js">
+
+        <center style="position: absolute; margin-top: 0px;">
+<h2>Car Form</h2>
+
+<form method="post" id="car_filtering_logsForm" data-models-url="{% url 'ajax_load_models' %}" data-years-url="{% url 'ajax_load_years' %}" data-engines-url="{% url 'ajax_load_engines' %}">
+
+    {% csrf_token %}
+    <table>
+      {% for field in form %}
+          <tr>
+              <td>{{ field.label}}</td>
+              <td>{{ field }}</td>
+          </tr>
+      {% endfor %}
+  </table>
+    <input type="submit" value="Continue">
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $("#id_marka").change(function () {
+        const url = $("#car_filtering_logsForm").attr("data-models-url");  // get the url of the `load_models` view
+        const markaId = $(this).val();  // get the selected marka ID from the HTML input
+
+        $.ajax({                       // initialize an AJAX request
+            url: url,                    // set the url of the request (= /ajax/load-models/ )
+            data: {
+                'marka_id': markaId       // add the marka id to the GET parameters
+            },
+            success: function (data) {   // `data` is the return of the `load_models` view function
+                console.log(data)
+                marka_id = markaId;
+                $("#id_model").html(data);  // replace the contents of the model input with the data that came from the server
+                
+            }
+        })
+
+    });
+
+    $("#id_model").change(function () {
+      var url = $("#car_filtering_logsForm").attr("data-years-url");
+      var modelId = $(this).val();
+      // var markaId = marka_id;
+      $.ajax({
+        url: url,
+        data: {
+          'model_id': modelId,
+          'marka_id': marka_id
+        },
+        success: function (data) {
+          model_id = modelId;
+          console.log(data)
+          $("#id_year").html(data);
+        }
+      })
+    });
+
+    $("#id_year").change(function () {
+      var url = $("#car_filtering_logsForm").attr("data-engines-url");
+      var yearId = $(this).val();
+      // var markaId = marka_id;
+      // var modelId = model_id;
+      $.ajax({
+        url: url,
+        data: {
+          'year_id': yearId,
+          'marka_id': marka_id,
+          'model_id': model_id
+        },
+        success: function (data) {
+          console.log(data)
+          year_id = yearId;
+          $("#id_engine").html(data);
+        }
+      })
+    });
+
+    // $("#id_engine").change(function () {
+    //   var url = $("#car_informationForm").attr("data-gearboxes-url");
+    //   var engineId = $(this).val();
+    //   $.ajax({
+    //     url: url,
+    //     data: {
+    //       'engine_id': engineId,
+    //       'year_id': year_id,
+    //       'marka_id': marka_id,
+    //       'model_id': model_id
+    //     },
+    //     success: function (data) {
+    //         console.log(data)
+    //         engine_id = engineId;
+    //       $("#id_gearbox").html(data);
+    //     }
+    //   })
+    //   
+    // });
+
+    // $("#id_gearbox").change(function () {
+    //   var url = $("#car_informationForm").attr("data-transmissions-url");
+    //   var gearboxId = $(this).val();
+    //   $.ajax({
+    //     url: url,
+    //     data: {
+    //       'gearbox_id': gearboxId,
+    //       'engine_id': engine_id,
+    //       'year_id': year_id,
+    //       'marka_id': marka_id,
+    //       'model_id': model_id
+    //     },
+    //     success: function (data) {
+          
+    //         console.log(data)
+    //         gearbox_id = gearboxId;
+    //       $("#id_transmission").html(data);
+    //     }
+    //   })
+    //   return gearbox_id;
+    // });
+
+
+    // $("#id_transmission").change(function () {
+    //   var url = $("#car_informationForm").attr("data-bantypes-url");
+    //   var transmissionId = $(this).val();
+    //   $.ajax({
+    //     url: url,
+    //     data: {
+    //       'transmission_id': transmissionId,
+    //       'gearbox_id': gearbox_id,
+    //       'engine_id': engine_id,
+    //       'year_id': year_id,
+    //       'marka_id': marka_id,
+    //       'model_id': model_id
+    //     },
+    //     success: function (data) {
+    //         console.log(data)
+    //         transmission_id = transmissionId;
+    //       $("#id_ban_type").html(data);
+    //     }
+    //   })
+    //   return transmission_id;
+    // });
+
+    // $("#id_ban_type").change(function () {
+    //   var url = $("#car_informationForm").attr("data-fueltypes-url");
+    //   var bantypeId = $(this).val();
+    //   $.ajax({
+    //     url: url,
+    //     data: {
+    //       'ban_type_id': bantypeId,
+    //       'transmission_id': transmission_id,
+    //       'gearbox_id': gearbox_id,
+    //       'engine_id': engine_id,
+    //       'year_id': year_id,
+    //       'marka_id': marka_id,
+    //       'model_id': model_id
+    //     },
+    //     success: function (data) {
+    //         console.log(data)
+    //         ban_type_id = bantypeId;
+    //       $("#id_fuel_type").html(data);
+    //     }
+    //   })
+    //   return ban_type_id;
+    // });
+
+</script>
+</center>
+</div>
+<script src="{% static 'js/particles.min.js' %}"></script>
+<script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>
